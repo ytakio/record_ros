@@ -20,24 +20,21 @@ void Record::wait_for_callback(){
 }
 
 bool Record::string_command(record_ros::String_cmd::Request& req, record_ros::String_cmd::Response& res){
-    std::string cmd = req.cmd;
+    bool f_record = req.f_record;
     ROS_INFO("Record callback");
-    if(cmd == "record"){
+    if(f_record == true){
         if(b_record){
-            ros::shutdown();
-            res.res = "stopping recorder";
+            res.msg = "stopping recorder";
         }else{
             b_record = true;
-            res.res  = "starting recorder";
+            res.msg  = "starting recorder";
         }
         return true;
-    }else if(cmd == "stop"){
-        ros::shutdown();
-        res.res = "stopping recorder";
-        return true;
-    }else{
-        res.res = "No such command[" + cmd + "] in [Record::string_command]";
-        ROS_WARN_STREAM(res.res);
-        return false;
     }
+	else{
+        ros::shutdown();
+        res.msg = "stopping recorder";
+        return true;
+    }
+	return true;
 }
